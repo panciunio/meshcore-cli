@@ -70,7 +70,7 @@ class TimestampedStdout:
 sys.stdout = TimestampedStdout(sys.stdout)
 
 # Version
-VERSION = "v1.6.4"
+VERSION = "v1.6.4a"
 
 # default ble address is stored in a config file
 MCCLI_CONFIG_DIR = os.path.expanduser("~/.config/meshcore/")
