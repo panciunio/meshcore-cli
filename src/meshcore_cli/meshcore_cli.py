@@ -34,6 +34,41 @@ except ImportError:
 
 from meshcore import MeshCore, EventType, logger
 
+from datetime import datetime
+
+class TimestampedStdout:
+    def __init__(self, original_stdout):
+        self.original_stdout = original_stdout
+        self.new_line = True
+
+    def write(self, message):
+        if message.strip():
+            if self.new_line:
+                timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                self.original_stdout.write(f"[{timestamp}] ")
+            self.original_stdout.write(message)
+            self.new_line = message.endswith('\n')
+        else:
+            self.original_stdout.write(message)
+
+    def flush(self):
+        self.original_stdout.flush()
+
+    def isatty(self):
+        if hasattr(self.original_stdout, 'isatty'):
+            return self.original_stdout.isatty()
+        return False
+
+    def fileno(self):
+        return self.original_stdout.fileno()
+
+    @property
+    def encoding(self):
+        return getattr(self.original_stdout, 'encoding', 'utf-8')
+
+# Podmieniamy standardowe wyjście na naszą wersję z datą
+sys.stdout = TimestampedStdout(sys.stdout)
+
 # Version
 VERSION = "v1.6.4"
 
@@ -5312,8 +5347,10 @@ async def main(argv):
     serial_rts = False
 
     # basic logger configuration (was removed from meshcore_py)
-    logging.basicConfig(level=logging.INFO)
+    #logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
+    
     # If there is an address in config file, use it by default
     # unless an arg is explicitely given
     if os.path.exists(MCCLI_ADDRESS) :
