@@ -377,3 +377,21 @@ FdlRoom> clock
 FdlRoom(0): 06:40 - 18/4/2025 UTC
 FdlRoom>
 </pre>
+
+## Installation
+
+```
+cd /full/path/to/meshcore-cli
+
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install -e .
+meshcore-cli
+deactivate
+
+pipx ensurepath
+pipx install --editable /full/path/to/meshcore-cli --force
+
+```
+
